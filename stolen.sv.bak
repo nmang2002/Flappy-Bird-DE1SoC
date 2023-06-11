@@ -1,0 +1,12 @@
+module discount(out, U, P, C, M);
+            output logic out;
+            input  logic U, P, C, M;
+				logic x, y, z, z2;
+				
+				and and1(x, P, M);
+				not not1(y, x);
+				not not2(z, C);
+				or or1(z2, z, U);
+				and and2(out, z2, y);
+				
+  endmodule

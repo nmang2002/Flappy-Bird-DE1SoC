@@ -1,0 +1,43 @@
+module score(green_in, red_in, stop, incr, clk, reset);
+
+	input logic [15:0] green_in, red_in;
+	input logic clk, reset;
+	output logic stop, incr;
+	logic incr_buffer, stop_buffer, collision;
+	
+	integer i;
+	
+	userInput score1(.Clock(clk), .RST(reset), .key(incr_buffer), .out(incr));
+	userInput score2(.Clock(clk), .RST(reset), .key(stop_buffer), .out(stop));
+
+	always_ff @(posedge clk) begin
+		for (i = 0; i < 16; i++) begin
+			if (green_in[i] & red_in[i]) begin
+				collision <= 1;
+				break;
+			end
+			else
+				collision <= 0;
+		end
+	end
+
+
+	always_ff @(posedge clk) begin
+		if (reset) begin
+			incr_buffer <= 0;
+			stop_buffer <= 0;
+		end
+		else if (collision == 1 | red_in == 0) begin
+			stop_buffer <= 1;
+			incr_buffer <= 0;
+		end
+		else if (green_in[15] == 1) begin
+			stop_buffer <= 0;
+			incr_buffer <= 1;
+		end
+		else begin
+			incr_buffer <= 0;
+			stop_buffer <= 0;
+		end
+	end
+endmodule

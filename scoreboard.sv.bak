@@ -1,0 +1,59 @@
+module scoreboard (incr, carry1, hexout, clk, reset);
+ 
+	input logic incr, reset, clk;
+	output logic [6:0] hexout;
+	output logic carry1;
+	
+	enum {zero, one, two, three, four, five, six, seven, eight, nine} ps, ns;
+
+	always_comb begin
+		case(ps)
+			zero: if (incr) ns = one;
+					else ns = zero;
+			one: if (incr) ns = two;
+					else ns = one;
+			two: if (incr) ns = three;
+					else ns = two;
+			three: if (incr) ns = four;
+					else ns = three;
+			four: if (incr) ns = five;
+					else ns = four;
+			five: if (incr) ns = six;
+					else ns = five;
+			six: if (incr) ns = seven;
+					else ns = six;
+			seven: if (incr) ns = eight;
+					else ns = seven;
+			eight: if (incr) ns = nine;
+					else ns = eight;
+			nine: if (incr) ns = zero;
+					else ns = nine;
+		endcase
+	end
+	
+	always_comb begin
+		case(ps)
+			zero: hexout = 7'b1000000;
+			one: hexout = 7'b1111001;
+			two: hexout = 7'b1111001;
+			three: hexout = 7'bb0110000;
+			four: hexout = 7'b0011001;
+			five: hexout = 7'b0010010;
+			six: hexout = 7'b0000010;
+			seven: hexout = 7'b1111000;
+			eight: hexout = 7'b0000000;
+			nine: hexout = 7'b0010000;
+		endcase
+	end
+ 
+ assign carry1 = (ps == nine & incr == 1);
+
+	//DFF
+	always_ff @(posedge clk) begin
+		if (reset)
+			ps <= zero;
+		else
+			ps <= ns;
+	end
+ 
+ endmodule 

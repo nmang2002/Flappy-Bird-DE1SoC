@@ -1,0 +1,29 @@
+# Reading C:/intelFPGA_lite/17.0/modelsim_ase/tcl/vsim/pref.tcl
+do runlab.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 22:38:07 on Apr 21,2022
+# vlog -reportprogress 300 ./DE1_SoC.sv 
+# -- Compiling module DE1_SoC
+# -- Compiling module discount
+# -- Compiling module stolen
+# -- Compiling module DE1_SoC_testbench
+# 
+# Top level modules:
+# 	discount
+# 	stolen
+# 	DE1_SoC_testbench
+# End time: 22:38:07 on Apr 21,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -voptargs=""+acc"" -t 1ps -lib work DE1_SoC_testbench 
+# Start time: 22:38:07 on Apr 21,2022
+# Loading sv_std.std
+# Loading work.DE1_SoC_testbench
+# Loading work.DE1_SoC
+# ** Error: Cannot open macro file: DE1_SoC.wave.do
+# Error in macro ./runlab.do line 17
+# Cannot open macro file: DE1_SoC.wave.do
+#     while executing
+# "do DE1_SoC.wave.do"
+# End time: 22:40:54 on Apr 21,2022, Elapsed time: 0:02:47
+# Errors: 3, Warnings: 0

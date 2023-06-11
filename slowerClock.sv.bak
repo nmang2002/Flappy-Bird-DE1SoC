@@ -1,0 +1,26 @@
+
+
+//Making a slower clock so that the pipes dont move fast and 
+//make the user lose by default.
+
+module slowerClock (clk, reset, slow_clk);
+		input logic clk, reset;
+	output logic slow_clk;
+	
+	logic [32:0] counter; //counter for dividing clock
+	
+	always_ff @(posedge clk) begin
+		if (reset) begin //hitting reset also makes the counter go back to 0
+			counter <= 0;
+			slow_clk <= 0; //sets the clock back to 0
+		end else if (counter == 8'b11111111) begin //if counter reaches 8'b11111111, it resets
+			counter <= 0;
+			slow_clk <= ~slow_clk; //clock is equal to 1 here
+		end else begin
+			counter <= counter + 1; //counter increments by one
+			slow_clk <= 0; 
+		end
+	end
+	
+
+endmodule

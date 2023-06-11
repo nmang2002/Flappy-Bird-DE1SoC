@@ -1,0 +1,18 @@
+module pipeshift (pattern_in, out, clk, enable, reset);
+
+	input logic enable, clk, reset;
+	input logic [15:0] pattern_in;
+	output logic [15:0][15:0] out;
+	integer i;
+	
+	
+	always_ff @(posedge clk) begin
+		if (reset)
+			out <= 16'b0;
+		else if (enable) begin
+				out <= {pattern_in, out[15:1]};
+		end
+		else
+			out <= out;
+	end
+endmodule 

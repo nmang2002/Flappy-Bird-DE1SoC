@@ -1,0 +1,78 @@
+module ledDisplay (pipe_in, bird_in, switch, red_out, green_out, clk, reset);
+	input logic switch, clk, reset;
+	input logic [15:0] bird_in;
+	logic [15:0][15:0] gameover, gameplay;
+	input logic [15:0][15:0] pipe_in;
+	output logic [15:0][15:0] red_out, green_out;
+	
+	enum {on, got_one} ps, ns;
+	
+		always_comb begin
+		case(ps)
+			on: if (switch) ns = got_one; 
+				 else ns = on;
+			got_one: ns = got_one;
+		endcase
+	end
+	
+	assign gameover[00] = 16'b0000000000000000;
+	assign gameover[01] = 16'b0000000000000000;
+	assign gameover[02] = 16'b0000000000000000;
+	assign gameover[03] = 16'b0000000000000000;
+	assign gameover[04] = 16'b1110111011100111;
+	assign gameover[05] = 16'b1010101010100101;
+	assign gameover[06] = 16'b1110101010100111;
+	assign gameover[07] = 16'b1000101010100100;
+	assign gameover[08] = 16'b1000101010100100;
+	assign gameover[09] = 16'b1000101010100100;
+   assign gameover[10] = 16'b1000111011100100;
+	assign gameover[11] = 16'b0000000000000000;
+	assign gameover[12] = 16'b0000000000000000;
+	assign gameover[13] = 16'b0000000000000000;
+	assign gameover[14] = 16'b0000000000000000;
+	assign gameover[15] = 16'b0000000000000000;
+	
+	
+	assign gameplay[00] = 0;
+	assign gameplay[01] = 0;
+	assign gameplay[02] = bird_in;
+	assign gameplay[03] = 0;
+	assign gameplay[04] = 0;
+	assign gameplay[05] = 0;
+	assign gameplay[06] = 0;
+	assign gameplay[07] = 0;
+	assign gameplay[08] = 0;
+	assign gameplay[09] = 0;
+   assign gameplay[10] = 0;
+	assign gameplay[11] = 0;
+	assign gameplay[12] = 0;
+	assign gameplay[13] = 0;
+	assign gameplay[14] = 0;
+	assign gameplay[15] = 0;
+
+	
+	always_comb begin
+		case(ps)
+			on: begin
+				red_out = gameplay;
+				green_out = pipe_in;
+			end
+			got_one: begin
+				red_out = gameover;
+				  green_out = 0;
+			end
+			default: begin
+				  red_out = gameover;
+				  green_out = 0;
+			end
+		endcase
+	end
+	
+	//DFF
+	always_ff @(posedge clk) begin
+		if (reset)
+			ps <= on;
+		else
+			ps <= ns;
+	end
+endmodule 

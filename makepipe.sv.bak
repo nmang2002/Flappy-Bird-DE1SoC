@@ -1,0 +1,62 @@
+module makepipe (out, clk, enable, reset);
+	input logic enable, clk, reset;
+	//input logic [2:0] difficulty_in;
+	output logic [15:0] out;
+	logic [9:0] in;
+	
+	LFSR l1 (.Clock(clk), .RST(reset), .out(in));
+	
+	integer a, count, i; 
+
+	always_ff @(posedge clk) begin
+		if (reset) begin
+			out <= '0;
+			count <= 3'b011;
+		end
+		else if (enable & count == 0) begin
+			count <= 3'b011;
+			for (i = 0; i < 16; i++) begin
+				if (i < a | i > (a + 4)) 
+					out[i] <= 1'b1;
+				else
+					out[i] <= 1'b0;
+			end
+		end
+		else if (enable & count == 1) begin 
+			a <= in % 11;
+			count <= count - 1;
+		end
+		else if (enable) begin
+			count <= count - 1;
+			out <= '0;
+		end
+	end
+endmodule 
+
+
+module makepipe_testbench();
+	logic reset, enable;
+	//logic [2:0] difficulty_in;
+	logic [15:0] out;
+	logic CLOCK_50;
+	
+	makepipe dut ( .out, .clk(CLOCK_50), .enable, .reset);
+	
+	// Set up a simulated clock.
+	parameter CLOCK_PERIOD = 100;
+	initial begin
+		CLOCK_50 <= 0;
+		forever #(CLOCK_PERIOD/2) CLOCK_50 <= ~CLOCK_50; // Forever toggle the clock
+	end
+	
+	// Test the design
+	initial begin
+		reset <= 1; enable <= 0; repeat(10) @(posedge CLOCK_50); // reset the module
+		
+		reset <= 0; enable <= 1; repeat (5) @(posedge CLOCK_50);
+		count <= 3'b011; repeat(10) @(posedge CLOCK_50);
+		
+		reset <= 1; repeat(10) @(posedge CLOCK_50); // reset the module
+		$stop;
+	end
+endmodule 

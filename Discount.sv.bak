@@ -1,0 +1,9 @@
+module discount(out, U, P, C);
+            output logic out;
+            input  logic U, P, C;
+				logic x;
+				
+				and and1(x, U, C);
+				or or1(out, P, x);
+				
+  endmodule
